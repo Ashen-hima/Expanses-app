@@ -1,4 +1,6 @@
 import 'package:expence_tracker/Screen/on_bording_screen.dart';
+import 'package:expence_tracker/service/user_service.dart';
+import 'package:expence_tracker/widget/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,11 +16,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "expense",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: "Inter"),
-      home: OnBordingScreen(),
+    return FutureBuilder(
+      future: UserService.checkUswerName(),
+
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          bool hasUserName = snapshot.data ?? false;
+          // Replace the following with your actual navigation logic
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(fontFamily: "inter"),
+            home: Wrapper(showMainScreen: hasUserName),
+          ); // or any other widget you want to show
+        }
+      },
     );
   }
 }

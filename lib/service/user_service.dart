@@ -34,4 +34,13 @@ class UserService {
       err.toString();
     }
   }
+
+  // method to get the user name is saved in shared preferences
+  static Future<bool> checkUswerName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //get the user name from shared preferences
+    String? userName = prefs.getString("UserName");
+    //if the user name is not null then return true
+    return userName != null;
+  }
 }
