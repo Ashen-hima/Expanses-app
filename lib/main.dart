@@ -1,3 +1,4 @@
+import 'package:expence_tracker/Screen/on_bording_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,14 +14,7 @@ class MyApp extends StatelessWidget {
       title: "expense",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: "Inter"),
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            "Hello flutter",
-            style: TextStyle(fontSize: 29, fontWeight: FontWeight.w500),
-          ),
-        ),
-      ),
+      home: OnBordingScreen(),
     );
   }
 }
