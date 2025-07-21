@@ -2,12 +2,20 @@ import 'package:expence_tracker/constant/colors.dart';
 import 'package:expence_tracker/constant/constant.dart';
 import 'package:expence_tracker/models/expense_model.dart';
 import 'package:expence_tracker/models/income_model.dart';
+import 'package:expence_tracker/service/expence_service.dart';
+import 'package:expence_tracker/service/income_service.dart';
 import 'package:expence_tracker/widget/custom_buttom.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddNewScreen extends StatefulWidget {
-  const AddNewScreen({super.key});
+  final Function(Expense) addExpense;
+  final Function(Income) addIncome;
+  const AddNewScreen({
+    super.key,
+    required this.addExpense,
+    required this.addIncome,
+  });
 
   @override
   State<AddNewScreen> createState() => _AddNewScreenState();
@@ -401,9 +409,62 @@ class _AddNewScreenState extends State<AddNewScreen> {
                         SizedBox(height: 20),
 
                         //add button
-                        CustomButtom(
-                          buttonName: "Add",
-                          buttonColor: _selectedMethod == 0 ? kRed : kGreen,
+                        GestureDetector(
+                          onTap: () async {
+                            ////////////////
+                            if (_selectedMethod == 0) {
+                              List<Expense> loadedExpenses =
+                                  await ExpenceService().loadExpenses();
+                              print(loadedExpenses.length);
+
+                              // create the expence to store
+
+                              Expense expense = Expense(
+                                id: loadedExpenses.length + 1,
+                                title: _titleControler.text,
+                                amount:
+                                    _amountcontroller.text.isEmpty
+                                        ? 0
+                                        : double.parse(_amountcontroller.text),
+                                category: _expenseModel,
+                                date: _selectedDate,
+                                time: _selectedTime,
+                                description: _descripController.text,
+                              );
+
+                              // save the expense
+                              widget.addExpense(expense);
+                            } else {
+                              List<Income> loadedIncome =
+                                  await IncomeService().loadIncome();
+                              //income--------------------------------------
+
+                              Income income = Income(
+                                id: loadedIncome.length + 1,
+                                title: _titleControler.text,
+                                amount:
+                                    _amountcontroller.text.isEmpty
+                                        ? 0
+                                        : double.parse(_amountcontroller.text),
+                                category: _incomeModel,
+                                date: _selectedDate,
+                                time: _selectedTime,
+                                description: _descripController.text,
+                              );
+                              //add Income
+                              widget.addIncome(income);
+
+                              //clear the feilds
+                              _titleControler.clear();
+                              _amountcontroller.clear();
+                              _descripController.clear();
+                            }
+                          },
+
+                          child: CustomButtom(
+                            buttonName: "Add",
+                            buttonColor: _selectedMethod == 0 ? kRed : kGreen,
+                          ),
                         ),
                       ],
                     ),
